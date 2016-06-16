@@ -11,28 +11,25 @@ public string ExecScript(string script){
   
   File.WriteAllText(name, script);
   
-	startInfo.UseShellExecute = false;
-	startInfo.RedirectStandardError = true;
-	startInfo.RedirectStandardOutput = true;
-	startInfo.FileName = "ruby.exe";
-	startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-	startInfo.Arguments = name;
+  startInfo.UseShellExecute = false;
+  startInfo.RedirectStandardError = true;
+  startInfo.RedirectStandardOutput = true;
+  startInfo.FileName = "ruby.exe";
+  startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+  startInfo.Arguments = name;
 
-	try
-	{
-	    using (var p = Process.Start(startInfo))
-	    {
-		    p.WaitForExit();
+  try {
+    using (var p = Process.Start(startInfo)) {
+      p.WaitForExit();
         
-        result += p.StandardOutput.ReadToEnd ();
-        result += "\r\n";
-        result += p.StandardError.ReadToEnd ();
-	    }
-	}
-	catch(Exception e)
-	{
-	    Console.WriteLine(e);
-	}
+      result += p.StandardOutput.ReadToEnd ();
+      result += "\r\n";
+      result += p.StandardError.ReadToEnd ();
+    }
+  }
+  catch(Exception e) {
+    Console.WriteLine(e);
+  }
   
   return result;
 }
