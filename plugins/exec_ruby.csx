@@ -16,7 +16,7 @@ public string ExecScript(string script){
   startInfo.RedirectStandardOutput = true;
   startInfo.FileName = "ruby.exe";
   startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-  startInfo.Arguments = name;
+  startInfo.Arguments = "-T3 " + name;
 
   try {
     using (var p = Process.Start(startInfo)) {
