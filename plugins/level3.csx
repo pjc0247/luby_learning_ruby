@@ -19,6 +19,10 @@ puts 5 + 5 # 10
 
 # 괄호를 사용하여 덧셈을 먼저 계산하도록 지정할 수 있습니다.
 puts (1 + 1) * 3 # 6
+
+# 변수를 이용한 계산 또한 가능합니다.
+a = 10
+puts a + 20 # 30
 ```
 .
 >>> *따라 해 보기*
@@ -32,7 +36,7 @@ puts (1 + 1) * 3 # 6
   }
 
   public static bool OnSubmit_3(string sender, string code, string result) {
-    if (result == "20")
+    if (result == "25")
       return true;
     return false;
   }

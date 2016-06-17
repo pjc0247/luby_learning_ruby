@@ -19,11 +19,11 @@ public void OnJump(Message msg) {
   Slack.SendMessage($"@{msg.sender}", $"youvejumptedtolevel {level + 1}");
 }
 
-[Subscribe("```\n(.+)\n```")]
+[Subscribe("```((.|\n)+)```")]
 public void OnMultilineScript(Message msg) {
   OnSubmit(msg);
 }
-[Subscribe("`([^`].+)`")]
+[Subscribe("^`([^`].+)`$")]
 public void OnScript(Message msg) {
   OnSubmit(msg);
 }
@@ -41,25 +41,26 @@ public void OnSubmit(Message msg) {
     code = prescript + "\r\n" + code;
   }
   
-  var result = ExecScript(code);
-  Slack.SendMessage($"@{msg.sender}", "*실행결과*\n```\n" + result + "```");
+  ExecScript(code, (result) => {
+    Slack.SendMessage($"@{msg.sender}", "*실행결과*\n```\n" + result + "```");
   
-  var handler = typeof(Levels).GetMethod($"OnSubmit_{level}");
-  if (handler != null) {
-    var pass = handler.Invoke(
-      null,
-      new object[] {msg.sender, originalCode.Trim(), result.Trim()});
-    
-    if ((bool)pass == true) {
-      Console.WriteLine("PASS");
-      SetLevel(msg.sender, level + 1);
+    var handler = typeof(Levels).GetMethod($"OnSubmit_{level}");
+    if (handler != null) {
+      var pass = handler.Invoke(
+        null,
+        new object[] {msg.sender, originalCode.Trim(), result.Trim()});
       
-      var initializer = typeof(Levels).GetMethod($"OnLevel_{level + 1}");
-      initializer?.Invoke(null, new object[] {msg.sender});
+      if ((bool)pass == true) {
+        Console.WriteLine("PASS");
+        SetLevel(msg.sender, level + 1);
+        
+        var initializer = typeof(Levels).GetMethod($"OnLevel_{level + 1}");
+        initializer?.Invoke(null, new object[] {msg.sender});
+      }
+      else {
+        Console.WriteLine("FAILE");
+      }
     }
-    else {
-      Console.WriteLine("FAILE");
-    }
-  }
+  });
 }
 
